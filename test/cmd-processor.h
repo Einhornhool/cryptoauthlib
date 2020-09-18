@@ -52,6 +52,7 @@ typedef struct
     fp_menu_handler fp_handler;
 }t_menu_info;
 
+void riot_switch_cfg(ATCAIfaceCfg*);
 
 int run_tests(int test);
 

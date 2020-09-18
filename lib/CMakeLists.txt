@@ -123,7 +123,7 @@ if(ATCA_PRINTF)
 add_definitions(-DATCAPRINTF)
 endif(ATCA_PRINTF)
 
-include_directories(cryptoauth PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ../third_party/hidapi/hidapi ${USB_INCLUDE_DIR})
+target_include_directories(cryptoauth PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ../third_party/hidapi/hidapi ${USB_INCLUDE_DIR})
 
 if(WIN32)
 set_target_properties(cryptoauth PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS true)

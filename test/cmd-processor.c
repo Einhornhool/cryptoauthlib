@@ -28,7 +28,7 @@
 // Undefine the Unity FAIL macro so it doesn't conflict with the ASF definition
 #undef FAIL
 
-#if !defined(_WIN32) && !defined(__linux__) && !defined(__XC32__) && !defined(__APPLE__) && !defined(ESP32)
+#if !defined(_WIN32) && !defined(__linux__) && !defined(__XC32__) && !defined(__APPLE__) && !defined(ESP32) && !defined(RIOT_APPLICATION)
 #ifdef ATMEL_START
 #include "atmel_start.h"
 #else
@@ -154,6 +154,15 @@ int main(int argc, char* argv[])
     }
 
     return exit_code;
+}
+#elif defined(RIOT_APPLICATION)
+#include <stdio.h>
+#include <stdlib.h>
+#include "cmd-processor.h"
+
+int atca_run_cmd(const char *command)
+{
+    return parse_cmd(command);
 }
 #else
 int processCmd(void)
@@ -925,6 +934,10 @@ static ATCA_STATUS set_test_config(ATCADeviceType deviceType)
 
     #ifdef ATCA_RASPBERRY_PI_3
     gCfg->atcai2c.bus = 1;
+    #endif
+
+    #ifdef MODULE_CRYPTOAUTHLIB_TEST
+    riot_switch_cfg(gCfg);
     #endif
 
     return ATCA_SUCCESS;
