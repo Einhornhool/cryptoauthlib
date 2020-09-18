@@ -304,11 +304,12 @@ ATCA_STATUS atca_execute_command(ATCAPacket* packet, ATCADevice device)
         max_delay_count = ATCA_POLLING_MAX_TIME_MSEC / ATCA_POLLING_FREQUENCY_TIME_MSEC;
 #endif
 
-        // if ((status = atwake(device->mIface)) != ATCA_SUCCESS)
-        // {
-        //     break;
-        // }
-
+#ifndef ATCA_MANUAL_ONOFF
+        if ((status = atwake(device->mIface)) != ATCA_SUCCESS)
+        {
+            break;
+        }
+#endif
         // send the command
         if ((status = atsend(device->mIface, (uint8_t*)packet, packet->txsize)) != ATCA_SUCCESS)
         {
@@ -365,7 +366,9 @@ ATCA_STATUS atca_execute_command(ATCAPacket* packet, ATCADevice device)
     }
     while (0);
 
-    // atidle(device->mIface);
+#ifndef ATCA_MANUAL_ONOFF
+    atidle(device->mIface);
+#endif
     return status;
 }
 
