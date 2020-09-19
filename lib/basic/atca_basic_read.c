@@ -54,6 +54,11 @@
  *
  *  returns ATCA_SUCCESS on success, otherwise an error code.
  */
+#ifdef ATCA_MANUAL_ONOFF
+extern void atecc_wake(void);
+extern void atecc_idle(void);
+#endif
+
 ATCA_STATUS atcab_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t offset, uint8_t *data, uint8_t len)
 {
     ATCAPacket packet;
@@ -95,10 +100,16 @@ ATCA_STATUS atcab_read_zone(uint8_t zone, uint16_t slot, uint8_t block, uint8_t 
             break;
         }
 
+#ifdef ATCA_MANUAL_ONOFF
+    atecc_wake();
+#endif
         if ((status = atca_execute_command(&packet, _gDevice)) != ATCA_SUCCESS)
         {
             break;
         }
+#ifdef ATCA_MANUAL_ONOFF
+    atecc_idle();
+#endif
 
         memcpy(data, &packet.data[1], len);
     }
